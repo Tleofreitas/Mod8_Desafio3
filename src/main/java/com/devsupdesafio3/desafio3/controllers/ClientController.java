@@ -28,8 +28,9 @@ public class ClientController {
 
 	// ------- Buscar clientes por ID --------------------------------
 	@GetMapping(value = "/{id}")
-	public ClientDTO findById(@PathVariable Long id) {
-		return service.findById(id);
+	public ResponseEntity<ClientDTO> findById(@PathVariable Long id) {
+		ClientDTO dto = service.findById(id);
+		return ResponseEntity.ok(dto);
 	}
 
 	// ------- Buscar todos os clientes de forma paginada-------------
@@ -38,7 +39,7 @@ public class ClientController {
 		return service.findAll(pageable);
 	}
 
-	// ------- Adicionar um novo produto no Banco -----------------------
+	// ------- Adicionar um novo Cliente no Banco -----------------------
 	@PostMapping
 	public ResponseEntity<ClientDTO> insert(@RequestBody ClientDTO dto) {
 		dto = service.insert(dto);
@@ -47,12 +48,14 @@ public class ClientController {
 		return ResponseEntity.created(uri).body(dto);// Retorno Customizado
 	}
 
+	// ------- Atualizar um novo Cliente no Banco -----------------------
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<ClientDTO> update(@PathVariable Long id, @RequestBody ClientDTO dto) {
 		dto = service.update(id, dto);
 		return ResponseEntity.ok(dto); // Retorno Customizado
 	}
 	
+	// ------- Deletar um novo Cliente no Banco -----------------------
 	@DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);

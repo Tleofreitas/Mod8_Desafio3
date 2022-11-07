@@ -26,7 +26,8 @@ public class ClientService {
 	// ------- Buscar o Cliente por ID -------------
 	@Transactional(readOnly = true)
 	public ClientDTO findById(Long id) {
-		Client client = repository.findById(id).get();
+		Client client = repository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException("Cliente inexistente"));
 		return new ClientDTO(client);
 	}
 
