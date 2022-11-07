@@ -1,14 +1,18 @@
 package com.devsupdesafio3.desafio3.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devsupdesafio3.desafio3.dto.ClientDTO;
 import com.devsupdesafio3.desafio3.entities.Client;
 import com.devsupdesafio3.desafio3.repositories.ClientRepository;
+import com.devsupdesafio3.desafio3.services.exceptions.DataBaseException;
 import com.devsupdesafio3.desafio3.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -70,15 +74,17 @@ public class ClientService {
 		}
 	}
 
-	/*
-	 * // ------- Deletar um produto -------------
-	 * 
-	 * @Transactional(propagation = Propagation.SUPPORTS) public void delete(Long
-	 * id) { try { repository.deleteById(id); } catch
-	 * (EmptyResultDataAccessException e) { throw new
-	 * ResourceNotFoundException("Recurso não encontrado");
-	 * 
-	 * } catch (DataIntegrityViolationException e) { throw new
-	 * DataBaseException("Falha de integridade referencial"); } }
-	 */
+	// ------- Deletar um produto -------------
+	@Transactional(propagation = Propagation.SUPPORTS)
+	public void delete(Long id) {
+		try {
+			repository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException("Recurso não encontrado");
+
+		} catch (DataIntegrityViolationException e) {
+			throw new DataBaseException("Falha de integridade referencial");
+		}
+	}
+
 }
