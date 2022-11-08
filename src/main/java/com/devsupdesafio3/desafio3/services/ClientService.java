@@ -48,13 +48,13 @@ public class ClientService {
 		entity.setChildren(dto.getChildren());
 	}
 
-	// ------- Adicionar um novo produto no Banco -------------
+	// ------- Adicionar um novo Cliente no Banco -------------
 	@Transactional
 	public ClientDTO insert(ClientDTO dto) {
-		// Criar um produto
+		// Criar um Cliente
 		Client entity = new Client();
 		copyDtoToEntity(dto, entity);
-		// Salvar o Produto no Repository
+		// Salvar o Cliente no Repository
 		entity = repository.save(entity);
 		// Converter e retornar em DTO
 		return new ClientDTO(entity);
@@ -69,19 +69,19 @@ public class ClientService {
 			entity = repository.save(entity);
 			return new ClientDTO(entity);
 		}
-		// Tratamento para quando tentar atualizar um produto que não existe
+		// Tratamento para quando tentar atualizar um Cliente que não existe
 		catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException("Recurso não encontrado");
+			throw new ResourceNotFoundException("Dados Inválidos");
 		}
 	}
 
-	// ------- Deletar um produto -------------
+	// ------- Deletar um Cliente -------------
 	@Transactional(propagation = Propagation.SUPPORTS)
 	public void delete(Long id) {
 		try {
 			repository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException("Recurso não encontrado");
+			throw new ResourceNotFoundException("Cliente Inexistente");
 
 		} catch (DataIntegrityViolationException e) {
 			throw new DataBaseException("Falha de integridade referencial");

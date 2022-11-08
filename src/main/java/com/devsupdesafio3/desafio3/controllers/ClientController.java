@@ -19,6 +19,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.devsupdesafio3.desafio3.dto.ClientDTO;
 import com.devsupdesafio3.desafio3.services.ClientService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/clients")
 public class ClientController {
@@ -26,14 +28,14 @@ public class ClientController {
 	@Autowired
 	private ClientService service;
 
-	// ------- Buscar clientes por ID --------------------------------
+	// ------- Buscar clientes por ID -----------------------------------
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<ClientDTO> findById(@PathVariable Long id) {
 		ClientDTO dto = service.findById(id);
 		return ResponseEntity.ok(dto);
 	}
 
-	// ------- Buscar todos os clientes de forma paginada-------------
+	// ------- Buscar todos os clientes de forma paginada---------------
 	@GetMapping
 	public Page<ClientDTO> findAll(Pageable pageable) {
 		return service.findAll(pageable);
@@ -41,7 +43,7 @@ public class ClientController {
 
 	// ------- Adicionar um novo Cliente no Banco -----------------------
 	@PostMapping
-	public ResponseEntity<ClientDTO> insert(@RequestBody ClientDTO dto) {
+	public ResponseEntity<ClientDTO> insert(@Valid @RequestBody ClientDTO dto) {
 		dto = service.insert(dto);
 		// Criar link para orecurso criado
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
@@ -50,7 +52,7 @@ public class ClientController {
 
 	// ------- Atualizar um novo Cliente no Banco -----------------------
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<ClientDTO> update(@PathVariable Long id, @RequestBody ClientDTO dto) {
+	public ResponseEntity<ClientDTO> update(@PathVariable Long id, @Valid @RequestBody ClientDTO dto) {
 		dto = service.update(id, dto);
 		return ResponseEntity.ok(dto); // Retorno Customizado
 	}

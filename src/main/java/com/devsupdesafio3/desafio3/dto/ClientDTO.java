@@ -4,11 +4,19 @@ import java.time.LocalDate;
 
 import com.devsupdesafio3.desafio3.entities.Client;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
+
 public class ClientDTO {
     private Long id;
+    @NotBlank(message = "Nome NÃO pode ser vazio!")
+    @Size(min = 3, message = "O nome precisa ter pelo menos 3 caracteres!")
     private String name;
     private String cpf;
     private Double income;
+    @PastOrPresent(message = "Datas FUTURAS não são aceitas!")
     private LocalDate birthDate;
     private Integer children;
 	
