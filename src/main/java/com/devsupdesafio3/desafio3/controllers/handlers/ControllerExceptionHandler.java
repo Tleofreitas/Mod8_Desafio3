@@ -18,17 +18,18 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
-	@ExceptionHandler(ResourceNotFoundException.class)
+	@ExceptionHandler(ResourceNotFoundException.class) // Interceptar a Exceção
 	public ResponseEntity<CustomError> resourceNotFoundException(ResourceNotFoundException e,
-			HttpServletRequest request) {
-		HttpStatus status = HttpStatus.NOT_FOUND;
+			HttpServletRequest request /* Obter a Url que deu exceção*/) {
+		HttpStatus status = HttpStatus.NOT_FOUND; // Erro 404
 		CustomError err = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
+		// Retornar o objeto
 		return ResponseEntity.status(status).body(err);
 	}
 
 	@ExceptionHandler(DataBaseException.class)
 	public ResponseEntity<CustomError> database(DataBaseException e, HttpServletRequest request) {
-		HttpStatus status = HttpStatus.BAD_REQUEST;
+		HttpStatus status = HttpStatus.BAD_REQUEST; // Erro 400
 		CustomError err = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(status).body(err);
 	}
@@ -36,13 +37,14 @@ public class ControllerExceptionHandler {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<CustomError> methodArgumentNotValid(MethodArgumentNotValidException e,
 			HttpServletRequest request) {
-		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY; // Erro 422
 		ValidationError err = new ValidationError(Instant.now(), status.value(), "Dados Inválidos",
 				request.getRequestURI());
-
+		// Verificar se há erros e adicionar na lista de erros
 		for (FieldError f : e.getBindingResult().getFieldErrors()) {
 			err.addError(f.getField(), f.getDefaultMessage());
 		}
+		// Retornar o objeto
 		return ResponseEntity.status(status).body(err);
 	}
 

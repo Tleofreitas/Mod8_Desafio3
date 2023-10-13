@@ -37,31 +37,36 @@ public class ClientController {
 
 	// ------- Buscar todos os clientes de forma paginada---------------
 	@GetMapping
-	public Page<ClientDTO> findAll(Pageable pageable) {
-		return service.findAll(pageable);
+	public ResponseEntity<Page<ClientDTO>> findAll(Pageable pageable) {
+		// Pageable = Listagem paginada
+		Page<ClientDTO> dto = service.findAll(pageable);
+		return ResponseEntity.ok(dto); // Retornar Status 200
 	}
 
 	// ------- Adicionar um novo Cliente no Banco -----------------------
 	@PostMapping
-	public ResponseEntity<ClientDTO> insert(@Valid @RequestBody ClientDTO dto) {
-		dto = service.insert(dto);
-		// Criar link para orecurso criado
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
-		return ResponseEntity.created(uri).body(dto);// Retorno Customizado
+	public ResponseEntity<ClientDTO> insert
+		(@Valid /* Para checar as validações inseridas no DTO*/
+		 @RequestBody ClientDTO dto) {
+		// @RequestBody = Corpo da requisição
+		dto = service.insert(dto); // Chamar o serviço de inserção e passar os dados
+		// URI = link do recurso criado | Boa prática
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(dto.getId()).toUri();
+		return ResponseEntity.created(uri).body(dto);// Retorno Customizado Status 201 Created
 	}
 
 	// ------- Atualizar um novo Cliente no Banco -----------------------
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<ClientDTO> update(@PathVariable Long id, @Valid @RequestBody ClientDTO dto) {
-		dto = service.update(id, dto);
-		return ResponseEntity.ok(dto); // Retorno Customizado
+		dto = service.update(id, dto); // Chamar o serviço de atualização com o Id passado e as infos de atualização
+		return ResponseEntity.ok(dto); // Retorno Customizado Status 200
 	}
 	
 	// ------- Deletar um novo Cliente no Banco -----------------------
 	@DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.delete(id);
-        return ResponseEntity.noContent().build(); // Retorno Customizado
+        service.delete(id); // Chamar o serviço de deletar com o Id passado
+		return ResponseEntity.noContent().build(); // Retorno Customizado Status 204 = Sem retorno
     }
-
 }

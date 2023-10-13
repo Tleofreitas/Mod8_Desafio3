@@ -34,7 +34,9 @@ public class ClientService {
 	// ------- Buscar todos os Clientes de forma Paginada -------------
 	@Transactional(readOnly = true)
 	public Page<ClientDTO> findAll(Pageable pageable) {
+		// Buscar no banco de dados a lista de Produtos | Pageable = Listagem paginada
 		Page<Client> result = repository.findAll(pageable);
+		// Converter a lista de  Product para ProductDTO e retornar para o controlador
 		return result.map(x -> new ClientDTO(x));
 	}
 
@@ -53,8 +55,9 @@ public class ClientService {
 	public ClientDTO insert(ClientDTO dto) {
 		// Criar um Cliente
 		Client entity = new Client();
+		// Copiar os dados do dto para a entidade
 		copyDtoToEntity(dto, entity);
-		// Salvar o Cliente no Repository
+		// Salvar o Cliente no Repository (banco de dados)
 		entity = repository.save(entity);
 		// Converter e retornar em DTO
 		return new ClientDTO(entity);
@@ -64,13 +67,18 @@ public class ClientService {
 	@Transactional
 	public ClientDTO update(Long id, ClientDTO dto) {
 		try {
+			// Instanciar um Cliente com a referência do Id
 			Client entity = repository.getReferenceById(id);
+			// Copiar os dados do dto para a entidade
 			copyDtoToEntity(dto, entity);
+			// Salvar no banco de dados
 			entity = repository.save(entity);
+			// Retornar como DTO
 			return new ClientDTO(entity);
 		}
 		// Tratamento para quando tentar atualizar um Cliente que não existe
 		catch (EntityNotFoundException e) {
+			// Se não encontrar o Id, lança exceção
 			throw new ResourceNotFoundException("Dados Inválidos");
 		}
 	}
@@ -78,14 +86,15 @@ public class ClientService {
 	// ------- Deletar um Cliente -------------
 	@Transactional(propagation = Propagation.SUPPORTS)
 	public void delete(Long id) {
+		if (!repository.existsById(id)) {
+			// Se não encontrar o Id, lança exceção
+			throw new ResourceNotFoundException("Recurso não encontrado");
+		}
 		try {
 			repository.deleteById(id);
-		} catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException("Cliente Inexistente");
-
-		} catch (DataIntegrityViolationException e) {
+		}
+		catch (DataIntegrityViolationException e) {
 			throw new DataBaseException("Falha de integridade referencial");
 		}
 	}
-
 }
