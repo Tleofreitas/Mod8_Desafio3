@@ -35,7 +35,14 @@ CHECKLIST:
 9. Deleção de cliente deleta cliente existente
 10. Deleção de cliente retorna 404 para cliente inexistente
 
+
 ---
+### Realizando Testes
+Video tutorial aqui
+
+---
+<br></br>
+# Para resalizar os testes localmente siga os passos abaixo
 ## *Pré-requisitos para testes locais* 
 Para testar localmente você deve ter instalados em sua máquina:
 
@@ -146,10 +153,6 @@ As tabelas que foram criadas podem ser vistas no lado esquerdo. Neste caso é ap
 Para ver o seed de dados, selecione a tabela e clique em Run. O retorno da consulta aparece logo abaixo.
 
 ![image](https://github.com/Tleofreitas/Mod8_Desafio3/assets/88738577/d7cb3a09-6c42-4bab-9f4f-20a640538c9d)
-
----
-### Realizando Testes
-Video tutorial aqui
 
 ---
 ## ⚠️ *Erros comuns* ⚠️
